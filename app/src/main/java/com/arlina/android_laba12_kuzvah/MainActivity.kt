@@ -1,6 +1,8 @@
 package com.arlina.android_laba12_kuzvah
 
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Row
@@ -35,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
@@ -44,27 +47,61 @@ import com.arlina.android_laba12_kuzvah.data.Datasource
 import com.arlina.android_laba12_kuzvah.model.Grade
 import com.arlina.android_laba12_kuzvah.ui.theme.Android_Laba12_KuzvahTheme
 
+private const val TAG = "MainActivity"
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate Called")
         enableEdgeToEdge()
         setContent {
             Android_Laba12_KuzvahTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize()
-                ){
+                ) {
                     GradeClickerApp(grades = Datasource.gradeList)
                 }
             }
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart Called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume Called")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onResume Called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onResume Called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onResume Called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onResume Called")
+    }
 }
 
+
 @Composable
-fun GradeClickerApp(grades: List<Grade>){
-    var points by remember { mutableStateOf(0) }
-    var clicks by remember { mutableStateOf(0) }
-    val currentGrade = determineGradeToShow(grades,points)
+fun GradeClickerApp(grades: List<Grade>) {
+    var points by rememberSaveable { mutableStateOf(0) }
+    var clicks by rememberSaveable { mutableStateOf(0) }
+    val currentGrade = determineGradeToShow(grades, points)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,12 +133,13 @@ fun GradeClickerApp(grades: List<Grade>){
 }
 
 @Composable
-fun TransactionInfo(points: Int,
-                    clicks: Int,
-                    modifier: Modifier=Modifier)
-{
+fun TransactionInfo(
+    points: Int,
+    clicks: Int,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier =modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
@@ -138,12 +176,12 @@ fun TransactionInfo(points: Int,
 fun determineGradeToShow(
     grades: List<Grade>,
     points: Int
-) : Grade{
-    var  gradeToShow = grades.first()
-    for (grade in grades){
-        if (points >= grade.threshold){
+): Grade {
+    var gradeToShow = grades.first()
+    for (grade in grades) {
+        if (points >= grade.threshold) {
             gradeToShow = grade
-        } else{
+        } else {
             break
         }
     }
@@ -153,8 +191,8 @@ fun determineGradeToShow(
 
 @Preview
 @Composable
-fun GradeClickerPreview(){
-    Android_Laba12_KuzvahTheme{
+fun GradeClickerPreview() {
+    Android_Laba12_KuzvahTheme {
         GradeClickerApp(grades = Datasource.gradeList)
     }
 }
